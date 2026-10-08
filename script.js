@@ -160,12 +160,7 @@ function setActiveFilter(filter) {
 
   for (const name of ["all", "liked", "disliked"]) {
     const button = document.getElementById(`filter-${name}`);
-    const isActive = name === filter;
-    button.setAttribute("aria-pressed", String(isActive));
-    button.classList.toggle("bg-[#D83A32]", isActive);
-    button.classList.toggle("text-white", isActive);
-    button.classList.toggle("font-semibold", isActive);
-    button.classList.toggle("text-[#6D5C53]", !isActive);
+    button.setAttribute("aria-pressed", String(name === filter));
   }
 
   renderRatedEpisodes();
