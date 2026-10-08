@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Find a random Bob's Burgers episode to watch."
+    />
+    <title>Bob's Burgers Episode Picker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./script.js" defer></script>
+    <style>
+      @font-face {
+        font-family: "Bob's Burgers";
+        src: url("./Bob's%20Burgers.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      .brand-font {
+        font-family: "Bob's Burgers", serif;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-[#FFF7E8] text-[#241C18] antialiased">
+    <div class="mx-auto flex min-h-screen w-full max-w-[720px] flex-col px-5">
+      <header class="flex flex-col gap-5 py-6 sm:flex-row sm:items-center sm:justify-between">
+        <a
+          class="flex flex-col items-start"
+          href="./index.html"
+          aria-label="Bob's Burgers Random Episode Generator home"
+        >
+          <span class="brand-font text-2xl text-[#D83A32] sm:text-3xl">Bob's Burgers</span>
+          <span class="font-sans text-sm font-normal text-[#6D5C53]">Random Episode Generator</span>
+        </a>
+
+        <nav
+          class="flex w-full items-center gap-1 rounded-full border border-white/80 bg-white/60 p-1 shadow-sm backdrop-blur sm:w-auto"
+          aria-label="Episode filters"
+        >
+          <button
+            id="filter-all"
+            class="flex-1 rounded-full bg-[#D83A32] px-4 py-2 text-sm font-semibold text-white sm:flex-none"
+            type="button"
+            aria-pressed="true"
+          >
+            All
+          </button>
+          <button
+            id="filter-liked"
+            class="flex-1 rounded-full px-4 py-2 text-sm font-medium text-[#6D5C53] transition hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D83A32] sm:flex-none"
+            type="button"
+            aria-pressed="false"
+          >
+            Liked
+          </button>
+          <button
+            id="filter-disliked"
+            class="flex-1 rounded-full px-4 py-2 text-sm font-medium text-[#6D5C53] transition hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D83A32] sm:flex-none"
+            type="button"
+            aria-pressed="false"
+          >
+            Disliked
+          </button>
+        </nav>
+      </header>
+
+      <main class="flex flex-1 flex-col items-center justify-center gap-6 py-8">
+        <section
+          id="generator-section"
+          class="w-full rounded-[2rem] border border-white/80 bg-white/70 p-6 shadow-[0_24px_80px_rgba(80,48,27,0.12)] backdrop-blur-xl sm:p-10"
+          aria-label="Random episode"
+        >
+          <div class="mb-8 text-center">
+            <div class="flex flex-wrap items-center justify-center gap-3">
+              <h2
+                id="title"
+                class="text-3xl font-bold leading-tight tracking-tight text-[#241C18] sm:text-4xl"
+              ></h2>
+              <div class="flex items-center gap-1" aria-label="Rate this episode">
+                <button
+                  id="like-btn"
+                  class="rounded-full p-2 text-[#9A8D85] transition hover:bg-[#FFF7E8] hover:text-[#D83A32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D83A32] disabled:cursor-not-allowed"
+                  type="button"
+                  aria-label="Like episode"
+                  aria-pressed="false"
+                  disabled
+                >
+                  <svg aria-hidden="true" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2 10h4v12H2zM22 11.5c0-.83-.67-1.5-1.5-1.5h-6.04l.91-4.36.03-.31c0-.31-.13-.61-.34-.83L13.99 4 7.41 10.59C7.15 10.85 7 11.2 7 11.59V20c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73z" />
+                  </svg>
+                </button>
+                <button
+                  id="dislike-btn"
+                  class="rounded-full p-2 text-[#9A8D85] transition hover:bg-[#FFF7E8] hover:text-[#D83A32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D83A32] disabled:cursor-not-allowed"
+                  type="button"
+                  aria-label="Dislike episode"
+                  aria-pressed="false"
+                  disabled
+                >
+                  <svg aria-hidden="true" class="h-6 w-6 rotate-180" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2 10h4v12H2zM22 11.5c0-.83-.67-1.5-1.5-1.5h-6.04l.91-4.36.03-.31c0-.31-.13-.61-.34-.83L13.99 4 7.41 10.59C7.15 10.85 7 11.2 7 11.59V20c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-base font-medium text-[#6D5C53]">
+              <p id="season-ep"></p>
+              <span id="rating"></span>
+            </div>
+          </div>
+
+          <div class="mb-8 aspect-video overflow-hidden rounded-2xl bg-[#FFF7E8]/80">
+            <img
+              id="episode-image"
+              class="hidden h-full w-full object-cover"
+              alt=""
+            />
+            <div
+              id="image-placeholder"
+              class="flex h-full w-full items-center justify-center p-5 text-center text-sm font-medium text-[#6D5C53]"
+            >
+              No artwork available
+            </div>
+          </div>
+
+          <div class="mb-8 min-h-32 rounded-2xl bg-[#FFF7E8]/80 p-5 sm:p-6">
+            <p
+              id="synopsis"
+              class="text-base leading-7 text-[#40342E]"
+            ></p>
+          </div>
+
+          <button
+            id="generate-btn"
+            class="brand-font w-full rounded-full bg-[#A92C27] px-6 py-4 text-2xl text-white shadow-lg shadow-[#A92C27]/20 transition hover:bg-[#84221F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D83A32] disabled:cursor-not-allowed disabled:opacity-50"
+            type="button"
+            disabled
+          >
+            Random Episode
+          </button>
+        </section>
+
+        <section
+          class="hidden w-full rounded-3xl border border-white/80 bg-white/60 p-5 shadow-sm backdrop-blur"
+          id="rated-episodes-section"
+          aria-label="Rated episode list"
+        >
+          <h2 id="rated-episodes-heading" class="mb-3 text-lg font-bold text-[#241C18]"></h2>
+          <p id="rated-episodes-empty" class="text-sm text-[#6D5C53]"></p>
+          <ul id="rated-episodes-list" class="space-y-2"></ul>
+        </section>
+      </main>
+
+      <footer class="pb-6 text-center text-sm text-[#6D5C53]">
+        Episode information provided by
+        <a
+          class="font-semibold underline decoration-[#F4C84A] decoration-2 underline-offset-4 hover:text-[#D83A32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D83A32]"
+          href="https://www.tvmaze.com/"
+          target="_blank"
+          rel="noreferrer"
+        >TVMaze</a>.
+      </footer>
+    </div>
+  </body>
+</html>
